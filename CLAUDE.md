@@ -6,7 +6,7 @@ This file is read automatically by Claude Code at the start of every session.
 
 A **zero-dependency, single-page browser app** that parses and visualises [Omni](https://omni.siderolabs.com/) support bundles. No build step, no server. Hosted on GitHub Pages at https://slessi.github.io/omni-support-bundle-parser/.
 
-The Omni product lives at `~/Projects/siderolabs/omni`. The sample bundle used during development is at `~/Downloads/support/` (extracted) and `~/Downloads/support.zip`.
+The Omni product source is at https://github.com/siderolabs/omni. A sample bundle (extracted directory or `.zip`) is needed for local testing — generate one from the Omni UI or via `omnictl support --cluster <name> support.zip`.
 
 ## File structure
 
@@ -111,9 +111,9 @@ The type name used for grouping is everything before the first `.` in `metadata.
 
 ## Omni product references
 
-- Support bundle collection code: `~/Projects/siderolabs/omni/internal/backend/grpc/support.go`
-- Proto definitions: `~/Projects/siderolabs/omni/client/api/omni/specs/omni.proto`
-- Resource types: `~/Projects/siderolabs/omni/client/pkg/omni/resources/omni/`
+- Support bundle collection code: [`internal/backend/grpc/support.go`](https://github.com/siderolabs/omni/blob/main/internal/backend/grpc/support.go)
+- Proto definitions: [`client/api/omni/specs/omni.proto`](https://github.com/siderolabs/omni/blob/main/client/api/omni/specs/omni.proto)
+- Resource types: [`client/pkg/omni/resources/omni/`](https://github.com/siderolabs/omni/tree/main/client/pkg/omni/resources/omni)
 - Docs: https://docs.siderolabs.com/
 
 ## Design conventions
