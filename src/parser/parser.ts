@@ -38,7 +38,9 @@ export async function loadZip(file: File): Promise<FileMap> {
     if (!entry.dir) topLevel.add(path.split('/')[0]);
   });
 
-  const rootDir = topLevel.size === 1 ? [...topLevel][0] : null;
+  const isKnownBundleDir = (d: string) =>
+    d === 'omni' || d === 'kubernetesResources' || /^\d+\.\d+\.\d+\.\d+$/.test(d);
+  const rootDir = topLevel.size === 1 && !isKnownBundleDir([...topLevel][0]) ? [...topLevel][0] : null;
 
   zip.forEach((relPath, entry) => {
     if (entry.dir) return;
