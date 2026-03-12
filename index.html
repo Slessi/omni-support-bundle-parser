@@ -1,70 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Omni Support Bundle Parser</title>
-  <script src="https://cdn.jsdelivr.net/npm/js-yaml@4/dist/js-yaml.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jszip@3/dist/jszip.min.js"></script>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-
-<!-- UPLOAD SCREEN -->
-<div id="screen-upload">
-  <div class="logo">
-    <svg viewBox="0 0 36 36" fill="none">
-      <rect width="36" height="36" rx="8" fill="#1c2333"/>
-      <path d="M18 8L28 14V22L18 28L8 22V14L18 8Z" stroke="#f97316" stroke-width="1.5" fill="none"/>
-      <circle cx="18" cy="18" r="4" fill="#f97316" opacity="0.9"/>
-    </svg>
-    <div>
-      <h1>Omni <span>Bundle</span> Parser</h1>
-      <p>Support bundle diagnostic viewer</p>
-    </div>
-  </div>
-  <div class="drop-zone" id="drop-zone">
-    <div class="drop-zone-icon">📦</div>
-    <h2>Open a support bundle</h2>
-    <p>Select an extracted bundle directory or a .zip archive</p>
-    <div class="btn-group">
-      <button class="btn btn-primary" id="btn-dir">📁 Open Directory</button>
-      <button class="btn" id="btn-zip">🗜 Open ZIP</button>
-    </div>
-  </div>
-  <input type="file" id="input-dir" webkitdirectory multiple hidden>
-  <input type="file" id="input-zip" accept=".zip" hidden>
-</div>
-
-<!-- LOADING SCREEN -->
-<div id="screen-loading" hidden>
-  <div class="spinner"></div>
-  <div class="progress-bar"><div class="progress-fill" id="progress-fill"></div></div>
-  <p class="progress-text" id="progress-text">Reading files…</p>
-</div>
-
-<!-- MAIN APP -->
-<div id="screen-app" hidden>
-  <div id="sidebar">
-    <div class="sidebar-header">
-      <div class="cluster-name" id="cluster-name">—</div>
-      <div class="cluster-meta" id="cluster-meta">—</div>
-    </div>
-    <nav class="nav" id="nav">
-      <div class="nav-item active" data-view="overview"><span class="nav-icon">◈</span> Overview</div>
-      <div class="nav-item" data-view="machines"><span class="nav-icon">⬡</span> Machines</div>
-      <div class="nav-item" data-view="machinesets"><span class="nav-icon">⬡</span> Machine Sets</div>
-      <div class="nav-item" data-view="nodes"><span class="nav-icon">⬡</span> Node Diagnostics</div>
-      <div class="nav-item" data-view="logs"><span class="nav-icon">☰</span> Logs</div>
-      <div class="nav-item" data-view="resources"><span class="nav-icon">☰</span> Resources</div>
-    </nav>
-    <div class="sidebar-footer" id="bundle-meta">—</div>
-  </div>
-  <main id="main"></main>
-</div>
-
-<script src="parser.js"></script>
-<script src="render.js"></script>
-<script src="app.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Omni Support Bundle Parser</title>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>
