@@ -28,11 +28,25 @@ function LogLines({ lines }: { lines: LogLine[] }) {
 export default function Logs() {
   const { state, dispatch } = useApp();
   const { machineLogs, serviceLogs, dmesgLogs, machines, files } = state.data!;
-  const { selected, lines, filter, levelFilter } = state.logs;
+  const { selected, lines, filter, levelFilter, listFilter } = state.logs;
   const viewerRef = useRef<HTMLDivElement>(null);
 
+  const q = listFilter.toLowerCase();
+
+  const visibleMachineLogs = machineLogs.filter(ml =>
+    !q || ml.hostname.toLowerCase().includes(q) || ml.id.toLowerCase().includes(q)
+  );
+  const visibleDmesgLogs = dmesgLogs.filter(dl =>
+    !q || dl.hostname.toLowerCase().includes(q) || dl.ip.includes(q)
+  );
+  const visibleServiceLogs = serviceLogs.filter(sl => {
+    if (!q) return true;
+    const m = machines.find(x => x.nodeIp === sl.ip || x.addresses.includes(sl.ip));
+    return sl.ip.includes(q) || (m?.hostname || '').toLowerCase().includes(q);
+  });
+
   const svcByIp: Record<string, typeof serviceLogs> = {};
-  serviceLogs.forEach(sl => {
+  visibleServiceLogs.forEach(sl => {
     if (!svcByIp[sl.ip]) svcByIp[sl.ip] = [];
     svcByIp[sl.ip].push(sl);
   });
@@ -48,6 +62,25 @@ export default function Logs() {
       console.error(e);
     }
   }
+
+  // Auto-select first matching log when listFilter is set (e.g. navigating from Machines)
+  useEffect(() => {
+    if (!listFilter) return;
+    const q = listFilter.toLowerCase();
+    const firstMachine = machineLogs.find(ml =>
+      ml.hostname.toLowerCase().includes(q) || ml.id.toLowerCase().includes(q)
+    );
+    const firstDmesg = !firstMachine ? dmesgLogs.find(dl =>
+      dl.hostname.toLowerCase().includes(q) || dl.ip.includes(q)
+    ) : null;
+    const firstSvc = !firstMachine && !firstDmesg ? serviceLogs.find(sl => {
+      const m = machines.find(x => x.nodeIp === sl.ip || x.addresses.includes(sl.ip));
+      return sl.ip.includes(q) || (m?.hostname || '').toLowerCase().includes(q);
+    }) : null;
+    const path = firstMachine?.path ?? firstDmesg?.path ?? firstSvc?.path ?? null;
+    if (path) selectLog(path);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [listFilter]);
 
   // Scroll to bottom when log changes
   useEffect(() => {
@@ -70,10 +103,21 @@ export default function Logs() {
       </div>
       <div className="split-layout">
         <div className="panel-list">
-          {machineLogs.length > 0 && (
+          <div style={{ padding:'0.5rem 0.625rem', borderBottom:'1px solid var(--border)' }}>
+            <div className="search-wrap">
+              <span className="search-icon">🔍</span>
+              <input
+                className="search-input"
+                placeholder="Filter by hostname, IP, UUID…"
+                value={listFilter}
+                onChange={e => dispatch({ type:'SET_LOG_LIST_FILTER', listFilter:e.target.value })}
+              />
+            </div>
+          </div>
+          {visibleMachineLogs.length > 0 && (
             <>
-              <div className="panel-list-header">Machine Logs ({machineLogs.length})</div>
-              {machineLogs.map(ml => (
+              <div className="panel-list-header">Machine Logs ({visibleMachineLogs.length})</div>
+              {visibleMachineLogs.map(ml => (
                 <div
                   key={ml.path}
                   className={`panel-list-item${selected===ml.path?' active':''}`}
@@ -86,10 +130,10 @@ export default function Logs() {
             </>
           )}
 
-          {dmesgLogs.length > 0 && (
+          {visibleDmesgLogs.length > 0 && (
             <>
-              <div className="panel-list-header">dmesg ({dmesgLogs.length})</div>
-              {dmesgLogs.map(dl => (
+              <div className="panel-list-header">dmesg ({visibleDmesgLogs.length})</div>
+              {visibleDmesgLogs.map(dl => (
                 <div
                   key={dl.path}
                   className={`panel-list-item${selected===dl.path?' active':''}`}
@@ -102,7 +146,7 @@ export default function Logs() {
             </>
           )}
 
-          {serviceLogs.length > 0 && (
+          {visibleServiceLogs.length > 0 && (
             <>
               <div className="panel-list-header">Service Logs</div>
               {Object.entries(svcByIp).map(([ip, logs]) => {

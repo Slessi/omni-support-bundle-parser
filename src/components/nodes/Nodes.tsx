@@ -209,8 +209,16 @@ function NodeResourcesList({ prefix, resFiles, files }: { prefix: string; resFil
 
 export default function Nodes() {
   const { state, dispatch } = useApp();
+  const [nodeSearch, setNodeSearch] = useState('');
   const { nodeIps, machines, nodeSummaries } = state.data!;
   const selected = state.nodes.selected || nodeIps[0];
+
+  const visibleNodeIps = nodeIps.filter(ip => {
+    if (!nodeSearch) return true;
+    const q = nodeSearch.toLowerCase();
+    const m = machines.find(x => x.nodeIp === ip || x.addresses.includes(ip));
+    return ip.includes(q) || (m?.hostname || '').toLowerCase().includes(q);
+  });
   const tab      = state.nodes.tab;
 
   const machine  = machines.find(m => m.nodeIp === selected || m.addresses.includes(selected));
@@ -225,8 +233,19 @@ export default function Nodes() {
       </div>
       <div className="split-layout">
         <div className="panel-list">
-          <div className="panel-list-header">Nodes ({nodeIps.length})</div>
-          {nodeIps.map(ip => {
+          <div style={{ padding:'0.5rem 0.625rem', borderBottom:'1px solid var(--border)' }}>
+            <div className="search-wrap">
+              <span className="search-icon">🔍</span>
+              <input
+                className="search-input"
+                placeholder="Filter by hostname or IP…"
+                value={nodeSearch}
+                onChange={e => setNodeSearch(e.target.value)}
+              />
+            </div>
+          </div>
+          <div className="panel-list-header">Nodes ({visibleNodeIps.length})</div>
+          {visibleNodeIps.map(ip => {
             const m = machines.find(x => x.nodeIp === ip || x.addresses.includes(ip));
             return (
               <div

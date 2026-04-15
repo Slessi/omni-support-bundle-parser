@@ -20,6 +20,7 @@ export interface AppState {
     lines: LogLine[];
     filter: string;
     levelFilter: string;
+    listFilter: string;
   };
   nodes: {
     selected: string | null;
@@ -39,6 +40,7 @@ export type Action =
   | { type: 'SET_VIEW'; payload: View }
   | { type: 'SELECT_LOG'; path: string; lines: LogLine[] }
   | { type: 'SET_LOG_FILTER'; filter: string; levelFilter: string }
+  | { type: 'SET_LOG_LIST_FILTER'; listFilter: string }
   | { type: 'SELECT_NODE'; ip: string }
   | { type: 'SET_NODE_TAB'; tab: string }
   | { type: 'SELECT_RESOURCE'; path: string; content: string }

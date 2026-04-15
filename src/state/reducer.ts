@@ -10,7 +10,7 @@ export const initialState: AppState = {
     filter: { role: '', status: '', search: '' },
     expanded: null,
   },
-  logs:      { selected: null, lines: [], filter: '', levelFilter: '' },
+  logs:      { selected: null, lines: [], filter: '', levelFilter: '', listFilter: '' },
   nodes:     { selected: null, tab: 'processes' },
   resources: { selected: null, content: null, groups: {} },
 };
@@ -27,7 +27,7 @@ export function reducer(state: AppState, action: Action): AppState {
         data: action.payload,
         view: 'overview',
         nodes: { ...state.nodes, selected: action.payload.nodeIps[0] || null },
-        logs: { selected: null, lines: [], filter: '', levelFilter: '' },
+        logs: { selected: null, lines: [], filter: '', levelFilter: '', listFilter: '' },
         resources: { selected: null, content: null, groups: {} },
       };
 
@@ -42,6 +42,9 @@ export function reducer(state: AppState, action: Action): AppState {
 
     case 'SET_LOG_FILTER':
       return { ...state, logs: { ...state.logs, filter: action.filter, levelFilter: action.levelFilter } };
+
+    case 'SET_LOG_LIST_FILTER':
+      return { ...state, logs: { ...state.logs, listFilter: action.listFilter } };
 
     case 'SELECT_NODE':
       return { ...state, nodes: { selected: action.ip, tab: 'processes' } };

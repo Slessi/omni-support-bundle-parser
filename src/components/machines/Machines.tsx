@@ -151,7 +151,30 @@ export default function Machines() {
                         <td colSpan={8}>
                           <div className="expand-content">
                             <div className="grid-3" style={{ gap:'1rem' }}>
-                              <div>
+                              <div style={{ gridColumn:'1 / -1', display:'flex', gap:'0.5rem', marginBottom:'0.25rem' }}>
+                              <button
+                                className="btn btn-sm"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  dispatch({ type:'SET_LOG_LIST_FILTER', listFilter: m.hostname || m.id });
+                                  dispatch({ type:'SET_VIEW', payload:'logs' });
+                                }}
+                              >
+                                View Logs →
+                              </button>
+                              <button
+                                className="btn btn-sm"
+                                onClick={e => {
+                                  e.stopPropagation();
+                                  if (m.nodeIp) dispatch({ type:'SELECT_NODE', ip: m.nodeIp });
+                                  else if (m.addresses[0]) dispatch({ type:'SELECT_NODE', ip: m.addresses[0] });
+                                  dispatch({ type:'SET_VIEW', payload:'nodes' });
+                                }}
+                              >
+                                Node Diagnostics →
+                              </button>
+                            </div>
+                            <div>
                                 <div className="card-title">Identity</div>
                                 <div className="info-grid">
                                   <span className="info-key">UUID</span>        <span className="info-val">{m.id}</span>
