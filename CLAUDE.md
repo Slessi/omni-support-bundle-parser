@@ -159,6 +159,11 @@ UPGRADE_PHASES  = { 0:Unknown, 1:Upgrading, 2:Done, 3:Failed }
 Push to `main` → GitHub Actions (`.github/workflows/pages.yml`) runs `npm ci && npm run build` then deploys `dist/` to GitHub Pages.
 GitHub Pages source must be set to **GitHub Actions** (not branch) in repo Settings → Pages.
 
+Container: `Dockerfile` (multi-stage: `node:26.13.1-alpine3.24` build, `nginx/nginx-unprivileged:1.31.8-alpine3.24` serve on port 8080; base images pinned to exact versions, bump manually).
+`.github/workflows/docker.yml` builds the image (no push) and smoke-tests it on every PR and push to `main`.
+`nginx.conf` enables gzip and sets cache headers: `/assets/` immutable for 1 year (content-hashed names), everything else `no-cache` so `index.html` revalidates after a deploy.
+Base path: `vite.config.ts` reads `base` from the `BASE_PATH` env var. Only `pages.yml` sets it, from `actions/configure-pages`' `base_path` output plus a trailing slash (`/omni-support-bundle-parser/`). Local dev, `npm run build` and Docker leave it unset, so the app is served at `/`.
+
 ## Omni product references
 
 - Support bundle collection: [`internal/backend/grpc/support.go`](https://github.com/siderolabs/omni/blob/main/internal/backend/grpc/support.go)

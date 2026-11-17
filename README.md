@@ -51,6 +51,20 @@ The CDN dependencies (`js-yaml`, `jszip`) are loaded from jsDelivr. An internet 
 
 ---
 
+## Run with Docker
+
+The image builds the app and serves it with an unprivileged nginx on port 8080.
+
+```sh
+docker build -t omni-support-bundle-parser .
+docker run --rm -p 8080:8080 omni-support-bundle-parser
+# then open http://localhost:8080
+```
+
+Bundles are parsed entirely in the browser; nothing is uploaded to the container.
+
+---
+
 ## Disclaimer
 
 > **This project was generated entirely by [Claude](https://claude.ai/) (Anthropic), an AI assistant.**

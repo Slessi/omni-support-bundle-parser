@@ -4,5 +4,6 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  base: '/omni-support-bundle-parser/',
+  // Vite defaults to '/' if unset.
+  base: process.env.BASE_PATH,
 });
